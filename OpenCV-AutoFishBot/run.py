@@ -11,6 +11,7 @@ time.sleep(5)
 
 sct = mss()
 countFish=1
+delayCount = 0
 
 while 1:
     os.system('xdotool click 3')
@@ -22,8 +23,8 @@ while 1:
         w, h = 800, 600
 
         #Lower and Upper RGB bounds of the red fishing bob
-        lower=np.array([30,34,196], dtype="uint8")
-        upper=np.array([40,44,206], dtype="uint8")
+        lower=np.array([36,36,189], dtype="uint8")
+        upper=np.array([48,48,229], dtype="uint8")
     
         #Takes a ROI screen capture of the upper middle left half of the screen.
         monitor = {'top': 100, 'left': 100, 'width': w, 'height': h}
@@ -32,13 +33,17 @@ while 1:
         mask=cv2.inRange(IMG, lower, upper)
 
         #Below can be commented out to improve performance.
-        cv2.imshow('test', IMG)
-        
-        if np.sum(mask) == 0:
-            
-            print(count)
+        cv2.imshow('test', mask)
+
+        #Gives user time to pull up mask window
+        if(delayCount==0):
+            time.sleep(10)
+        delayCount+=1
+
+        if np.sum(mask) == 0:    
+            print(countFish)
             countFish+=1
-     
+            cv2.imwrite('BobBelowSurface.png', IMG)
             os.system('xdotool click 3')
             time.sleep(1)
             break
